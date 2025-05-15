@@ -3,58 +3,125 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Extrair Iframe</title>
+  <title>Extrair Link do Iframe</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background: #f0f0f0;
+    * {
+      box-sizing: border-box;
     }
 
-    input, button {
-      padding: 10px;
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #1e3c72, #2a5298);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: 26px;
+      text-align: center;
+    }
+
+    .container {
+      background: #ffffff10;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 14px;
       font-size: 16px;
-      margin-bottom: 10px;
+      border: none;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      background: #ffffff20;
+      color: #fff;
+    }
+
+    input[type="text"]::placeholder {
+      color: #ddd;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #00c853;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #00b44a;
+    }
+
+    #resultado {
+      margin-top: 20px;
     }
 
     #iframeLink {
       margin-top: 10px;
-      font-weight: bold;
+      background: #ffffff20;
+      padding: 12px;
+      border-radius: 6px;
       word-break: break-all;
-      background: #fff;
-      padding: 10px;
-      border: 1px solid #ccc;
-    }
-
-    .hidden {
-      display: none;
+      font-weight: bold;
     }
 
     .copy-btn {
-      margin-left: 10px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-      padding: 10px;
+      margin-top: 10px;
+      background-color: #2196F3;
     }
 
     .copy-btn:hover {
-      background-color: #45a049;
+      background-color: #1e88e5;
+    }
+
+    @media (max-width: 600px) {
+      h2 {
+        font-size: 22px;
+      }
+
+      .container {
+        padding: 20px;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      .copy-btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h2>Extrair link do iframe</h2>
+  <h2>Extrair Link do Iframe (Canal)</h2>
 
-  <input type="text" id="urlInput" placeholder="Cole a URL do canal aqui" size="80" />
-  <button onclick="buscarIframe()">Buscar iframe</button>
+  <div class="container">
+    <input type="text" id="urlInput" placeholder="Cole aqui a URL do canal (embed)..." />
+    <button onclick="buscarIframe()">Buscar iframe</button>
 
-  <div id="resultado" class="hidden">
-    <p>Iframe encontrado:</p>
-    <div id="iframeLink"></div>
-    <button class="copy-btn" onclick="copiarIframe()">Copiar link</button>
+    <div id="resultado" class="hidden">
+      <p>Iframe encontrado:</p>
+      <div id="iframeLink"></div>
+      <button class="copy-btn" onclick="copiarIframe()">Copiar link</button>
+    </div>
   </div>
 
   <script>
@@ -71,23 +138,26 @@
         const doc = parser.parseFromString(html, "text/html");
         const iframe = doc.querySelector("iframe");
 
+        const resultadoDiv = document.getElementById("resultado");
+        const iframeDiv = document.getElementById("iframeLink");
+
         if (iframe && iframe.src) {
-          document.getElementById("iframeLink").textContent = iframe.src;
-          document.getElementById("resultado").classList.remove("hidden");
+          iframeDiv.textContent = iframe.src;
         } else {
-          document.getElementById("iframeLink").textContent = "Iframe não encontrado.";
-          document.getElementById("resultado").classList.remove("hidden");
+          iframeDiv.textContent = "Iframe não encontrado.";
         }
+
+        resultadoDiv.classList.remove("hidden");
       } catch (error) {
-        console.error("Erro ao buscar iframe:", error);
         alert("Erro ao buscar o iframe.");
+        console.error("Erro:", error);
       }
     }
 
     function copiarIframe() {
       const text = document.getElementById("iframeLink").textContent;
       navigator.clipboard.writeText(text).then(() => {
-        alert("Link copiado para a área de transferência!");
+        alert("Link copiado com sucesso!");
       });
     }
   </script>
