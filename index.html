@@ -1,1 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Extrair Iframe</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0f0f0f;
+      color: #f0f0f0;
+      padding: 20px;
+      text-align: center;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px;
+      width: 80%;
+      max-width: 500px;
+    }
+    #result {
+      margin-top: 20px;
+      word-break: break-all;
+    }
+    a {
+      color: #4fc3f7;
+    }
+  </style>
+</head>
+<body>
 
+  <h1>Descobrir Link do Iframe</h1>
+
+  <input type="text" id="urlInput" placeholder="Cole o link do canal aqui" />
+  <br>
+  <button onclick="buscarIframe()">Buscar iframe</button>
+
+  <div id="result"></div>
+
+  <script>
+    async function buscarIframe() {
+      const inputUrl = document.getElementById('urlInput').value.trim();
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = 'Carregando...';
+
+      if (!inputUrl) {
+        resultDiv.innerHTML = 'Por favor, insira uma URL válida.';
+        return;
+      }
+
+      try {
+        const scraperApiKey = 'f367a6108ce7e5f1fd57ef78c49bd671';
+        const scraperUrl = `https://api.scraperapi.com/?api_key=${scraperApiKey}&render=true&url=${encodeURIComponent(inputUrl)}`;
+
+        const response = await fetch(scraperUrl);
+        const html = await response.text();
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const iframe = doc.querySelector('iframe');
+
+        if (iframe && iframe.src) {
+          resultDiv.innerHTML = `Iframe encontrado:<br><a href="${iframe.src}" target="_blank">${iframe.src}</a>`;
+        } else {
+          resultDiv.innerHTML = 'iframe não encontrado.';
+        }
+      } catch (error) {
+        console.error(error);
+        resultDiv.innerHTML = 'Erro ao buscar o iframe.';
+      }
+    }
+  </script>
+
+</body>
+</html>
